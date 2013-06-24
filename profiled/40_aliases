@@ -1,4 +1,4 @@
-alias ls="ls -F"
+alias ls="ls -F --color=auto"
 
 # Used for Europa development
 alias v="vagrant"
