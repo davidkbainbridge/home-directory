@@ -1,4 +1,10 @@
-alias ls="ls -F --color=auto"
+if [ "$ARCH" = "Linux" ]; then
+  LSCOLOROPT=" --color=auto"
+elif [ "$ARCH" = "Darwin" ]; then
+  LSCOLOROPT=" -G"
+fi
+
+alias ls="ls -F$LSCOLOROPT"
 
 # Used for Europa development
 alias v="vagrant"

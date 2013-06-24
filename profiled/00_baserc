@@ -7,3 +7,6 @@ export WORKSPACES=$BASE/workspaces
 
 export GID=`id -g`
 export GROUP=`grep ":$GID:" /etc/group | awk -F: '{print $1}'`
+
+export ARCH=`uname -s`
+
