@@ -1,0 +1,5 @@
+alias ls="ls -F"
+
+# Used for Europa development
+alias v="vagrant"
+alias mkdevenv='python -c "$(curl -fsSL https://raw.github.com/zenoss/europa-dev/go)"'

@@ -1,0 +1,59 @@
+export SVN_BASE=http://dev.zenoss.com/svnint
+export SVN_TRUNK=$SVN_BASE/trunk
+export SVN_CORE=$SVN_TRUNK/core
+export SVN_ENTERPRISE=$SVN_TRUNK/enterprise
+export SVN_SANDBOX=$SVN_BASE/sandboxen/dbainbridge
+export SVN_BRANCHES=$SVN_BASE/branches
+export SVN_CORE_BRANCHES=$SVN_BRANCHES/core
+
+# Set the protocol version for TDS so Zenoss can talk to Sybase
+export TDSVER=5.0
+
+# HBASE and TSDB SET UP
+export COMPRESSION=NONE
+export HBASE_HOME=$PACKAGES/hbase-0.92.1
+export TSDB_HOME=$PACKAGES/opentsdb
+export tsdtmp=/tmp/tsd
+
+# Function to set up ZENHOME and paths
+function zet {
+  if [ $# -ne 1 ]; then
+    echo "usage: zet <zenhome suffix>"
+    return
+  fi
+
+  export ZEN_VERSION=$1
+  
+  export ZENHOME=$WORKSPACES/zenhome/$ZEN_VERSION
+  export ZENDEV=$WORKSPACES/zenoss/$ZEN_VERSION
+  export PATH=$ZENHOME/bin:$PATH
+  export PYTHONPATH=$ZENHOME/lib/python
+  export ZEN_CORE=$ZENDEV/core
+  export ZEN_ENTERPRISE=$ZENDEV/enterprise
+  export ZEN_ENT=$ZEN_ENTERPRISE
+  mkdir -p $ZENHOME
+
+  alias zenhome='cd $ZENHOME'
+  alias core='cd $ZENDEV/core'
+  alias enterprise='cd $ZENDEV/enterprise'
+  alias version='echo $ZEN_VERSION'
+}
+
+function zown {
+  sudo chown $GROUP:$USER $ZENHOME/bin/{pyraw,zensocket,nmap}
+  sudo chmod 04750 $ZENHOME/bin/{pyraw,zensocket,nmap}
+}
+
+function zbuild {
+  if [ "$__ZEN_VERSION x" == " x" ]; then
+    echo "Must establish Zenoss development environment with 'zet' command"
+    return 1
+  fi
+  OUTFILE=build_$$.log
+  if [ $# -eq 1 ]; then
+    OUTFILE=$1
+  fi
+  ./configure --with-rrdtool=yes 2>&1 | tee $OUTFILE && make -f zenoss.mk clean 2>&1 | tee -a $OUTFILE && make -f zenoss.mk 2>&1 | tee -a $OUTFILE && ./mkzenossinstance.sh 2>&1 | tee -a $OUTFILE
+}
+
+export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=cpp

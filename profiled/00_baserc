@@ -1,0 +1,9 @@
+export STORAGE=/Volumes/Storage
+export BASE=/Volumes/Storage
+
+export PACKAGES=$BASE/packages
+export SRC=$BASE/src
+export WORKSPACES=$BASE/workspaces
+
+export GID=`id -g`
+export GROUP=`grep ":$GID:" /etc/group | awk -F: '{print $1}'`

@@ -1,0 +1,17 @@
+# Set Up Go
+
+if [ "$GOROOT x" = " x" ]; then
+  if [ -d /opt/go/current ]; then
+    export GOROOT=/opt/go/current
+  elif [ -d /usr/local/go ]; then
+    export GOROOT=/usr/local/go
+  fi
+fi
+
+gopath() {
+  if [ $# == 0 ]; then
+    export GOPATH=`pwd`
+  else
+    export GOPATH="$1"
+  fi
+}
