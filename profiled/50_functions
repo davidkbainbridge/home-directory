@@ -1,0 +1,24 @@
+if [ "$ARCH" = "Darwin" ]; then
+function mksparsebundle() {
+  if [ $# -lt 2 -o $# -gt 3 ]; then
+    echo "usage: mksparsebundle <size> <name> [target]"
+    echo "  size:   volume size, #[mgtp]"
+    echo "  name:   volume name"
+    echo "  target: sparse bundle name or destination directory"
+    echo ""
+    echo "ex: mkspacebundle 10g mybundle"
+    return 1
+  fi
+
+  local FILE=$2.sparsebundle
+  if [ $# -eq 3 ]; then
+    FILE=$3
+  fi
+
+  if [ -d $FILE ]; then
+    FILE="$FILE/$2.sparsebundle"
+  fi
+
+  /usr/bin/hdiutil create -type SPARSEBUNDLE -layout SPUD -size $1 -fs 'Case-sensitive Journaled HFS+' -volname $2 -attach $FILE
+}
+fi
