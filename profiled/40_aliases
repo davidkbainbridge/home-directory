@@ -4,8 +4,14 @@ elif [ "$ARCH" = "Darwin" ]; then
   LSCOLOROPT=" -G"
 fi
 
+# Short cuts to get where we are going
+alias dev='cd /Volumes/europa-dev'
+alias src='cd $BASE/src'
+alias base='cd $BASE'
+
 alias ls="ls -F$LSCOLOROPT"
 
 # Used for Europa development
 alias v="vagrant"
 alias mkdevenv='python -c "$(curl -fsSL https://raw.github.com/zenoss/europa-dev/go)"'
+alias mkrmdevenv='EUROPAPRIVATE= python -c "$(curl -fsSL https://raw.github.com/zenoss/europa-dev/go)"'

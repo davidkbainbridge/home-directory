@@ -3,7 +3,7 @@ if [ -f /etc/bashrc ]; then
 fi
 
 function pathshorten {
-	echo $PWD | sed "s|$HOME|~|" | sed -e "s|$STORAGE|@|"
+	echo $PWD | sed "s|$HOME|~|" | sed -e "s|$STORAGE|@|" | sed -e 's|/Volumes/europa-dev|\&|'
 }
 
 function prompt {
