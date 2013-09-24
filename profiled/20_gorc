@@ -5,7 +5,14 @@ if [ "$GOROOT x" = " x" ]; then
     export GOROOT=/opt/go/current
   elif [ -d /usr/local/go ]; then
     export GOROOT=/usr/local/go
+  elif [ -d $PACKAGES/go/current ]; then
+    export GOROOT=$PACKAGES/go/current
   fi
+fi
+
+FOUND=`echo ":$PATH:" | grep ":$GOROOT/bin:"`
+if [ "$FOUND X" == " X" ]; then
+  export PATH=$GOROOT/bin:$PATH
 fi
 
 gopath() {

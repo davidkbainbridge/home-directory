@@ -1,0 +1,9 @@
+# Set Up JSDoc - JavaScript Documentation Tool
+
+if [ "$JSDOC_HOME x" = " x" ]; then
+  export JSDOC_HOME=$PACKAGES/jsdoc
+fi
+FOUND=`echo ":$PATH:" | grep ":$JSDOC_HOME:"`
+if [ "$FOUND x" == " x" ]; then
+  export PATH=$PATH:$JSDOC_HOME
+fi
