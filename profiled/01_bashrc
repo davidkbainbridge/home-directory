@@ -31,14 +31,6 @@ prompt
 export BUILD64=1          # enable with 64-bit mysql, disable with 32-bit mysql
 export EDITOR=vi
 
-if [ "$JAVA_HOME x" = " x" ]; then
-  if [ -d "/opt/java/current" ]; then
-    echo JAVA_HOME=/opt/java/current
-  elif [ -x "/usr/libexec/java_home" ]; then
-    export JAVA_HOME=`/usr/libexec/java_home`
-  fi
-fi
-
 export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
 
 # path

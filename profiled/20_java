@@ -1,0 +1,13 @@
+# Set Up Java - Java language
+
+if [ "$JAVA_HOME x" = " x" ]; then
+  if [ -d "/opt/java/current" ]; then
+    export JAVA_HOME=/opt/java/current
+  elif [ -x "/usr/libexec/java_home" ]; then
+    export JAVA_HOME=`/usr/libexec/java_home`
+  fi
+  FOUND=`echo ":$PATH:" | grep ":$JAVA_HOME/bin:"`
+  if [ "$FOUND x" == " x" ]; then
+    export PATH=$JAVA_HOME/bin:$PATH
+  fi
+fi
