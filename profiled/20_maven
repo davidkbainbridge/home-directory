@@ -1,0 +1,11 @@
+# Set Up Maven - Java build tool
+
+if [ "$MAVEN_HOME x" = " x" ]; then
+  if [ -e '/opt/apache/maven/current' ]; then
+    export MAVEN_HOME=/opt/apache/maven/current
+  fi
+  FOUND=`echo ":$PATH:" | grep ":$MAVEN_HOME/bin:"`
+  if [ "$FOUND x" == " x" ]; then
+    export PATH=$MAVEN_HOME/bin:$PATH
+  fi
+fi
