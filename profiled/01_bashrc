@@ -3,7 +3,8 @@ if [ -f /etc/bashrc ]; then
 fi
 
 function pathshorten {
-	echo $PWD | sed "s|$HOME|~|" | sed -e "s|$STORAGE|@|" | sed -e 's|/Volumes/europa-dev|\&|'
+	export SHORT_PWD=`echo $PWD | sed "s|$HOME|~|" | sed -e "s|$STORAGE|@|" | sed -e 's|/Volumes/europa-dev|\&|'`
+	echo $SHORT_PWD
 }
 
 function prompt {
@@ -24,7 +25,7 @@ function prompt {
   local WHITE="\[\e[0;37m\]"
   local WHITEBOLD="\[\e[1;37m\]"
   local DEFAULT="\[\e[1;00m\]"
-  export PS1="\033]0;`pathshorten`@`hostname`\007$WHITEBOLD\h$BLACK:$BLUE"'`pathshorten`'"$YELLOWBOLD\$ $DEFAULT"
+  export PS1='\033]0;`pathshorten`@`hostname`\007'"$WHITEBOLD\h$BLACK:$BLUE"'`pathshorten`'"$YELLOWBOLD\$ $DEFAULT"
 }
 prompt
 trap 'echo -ne "\033]0;`pathshorten`@`hostname` - $BASH_COMMAND\007"' DEBUG
