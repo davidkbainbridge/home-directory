@@ -1,0 +1,11 @@
+# Set Up Eclipse - IDE
+
+if [ "$ECLIPSE_HOME x" = " x" ]; then
+  if [ -d "/opt/eclipse/current" ]; then
+    export ECLIPSE_HOME=/opt/eclipse/current
+  fi
+  FOUND=`echo ":$PATH:" | grep ":$ECLIPSE_HOME:"`
+  if [ "$FOUND x" == " x" ]; then
+    export PATH=$ECLIPSE_HOME:$PATH
+  fi
+fi
