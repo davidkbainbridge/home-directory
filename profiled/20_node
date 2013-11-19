@@ -1,0 +1,11 @@
+# Set Up Node (JavaScript) - JavaScript language
+
+if [ "$NODE_HOME x" = " x" ]; then
+  if [ -d "/opt/node/current" ]; then
+    export NODE_HOME=/opt/node/current
+  fi
+  FOUND=`echo ":$PATH:" | grep ":$NODE_HOME/bin:"`
+  if [ "$FOUND x" == " x" ]; then
+    export PATH=$NODE_HOME/bin:$PATH
+  fi
+fi

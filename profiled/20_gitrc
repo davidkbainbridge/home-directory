@@ -1,13 +1,13 @@
 git config --global color.ui true
-git config credential.helper cache
+git config --global credential.helper cache
+git config --global user.name "David K. Bainbridge"
 
 function gituser {
-    git config --global user.name "David K. Bainbridge"
     if [ "$1 x" != " x" -a -f $HOME/.${1}_email ]; then
         GIT_EMAIL=`cat $HOME/.${1}_email`
-        git config --global user.email "$GIT_EMAIL"
+        git config --local user.email "$GIT_EMAIL"
     else
-        git config --global user.email "davidk.bainbridge@gmail.com"
+        git config --local user.email "davidk.bainbridge@gmail.com"
     fi
 }
 
