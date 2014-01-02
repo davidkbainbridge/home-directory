@@ -15,3 +15,8 @@ alias ls="ls -F$LSCOLOROPT"
 alias v="vagrant"
 alias mkdevenv='python -c "$(curl -fsSL https://raw.github.com/zenoss/europa-dev/go)"'
 alias mkrmdevenv='EUROPAPRIVATE= python -c "$(curl -fsSL https://raw.github.com/zenoss/europa-dev/go)"'
+
+# Open Day Light
+export ODL_HOME="$HOME/src/opendaylight"
+
+alias cdrunit='cd $ODL_HOME/controller/opendaylight/distribution/opendaylight/target/distribution.opendaylight-osgipackage/opendaylight'
