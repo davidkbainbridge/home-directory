@@ -2,11 +2,6 @@ if [ -f /etc/bashrc ]; then
     source /etc/bashrc
 fi
 
-function pathshorten {
-	export SHORT_PWD=`echo $PWD | sed "s|$HOME|~|" | sed -e "s|$STORAGE|@|" | sed -e 's|/Volumes/europa-dev|\&|'`
-	echo $SHORT_PWD
-}
-
 function prompt {
   local BLACK="\[\e[0;30m\]"
   local REDBOLD="\[\e[1;30m\]"
@@ -25,10 +20,9 @@ function prompt {
   local WHITE="\[\e[0;37m\]"
   local WHITEBOLD="\[\e[1;37m\]"
   local DEFAULT="\[\e[1;00m\]"
-  export PS1='\[\033]0;`pathshorten`@`hostname`\007\]'"$WHITEBOLD\h$BLACK:$BLUE"'`pathshorten`'"$YELLOWBOLD\$ $DEFAULT"
+  export PS1="$WHITEBOLD\h$BLACK:$BLUE"'\w'"$YELLOWBOLD\$ $DEFAULT"
 }
 prompt
-trap 'echo -ne "\033]0;`pathshorten`@`hostname` - $BASH_COMMAND\007"' DEBUG
 
 export BUILD64=1          # enable with 64-bit mysql, disable with 32-bit mysql
 export EDITOR=vi
