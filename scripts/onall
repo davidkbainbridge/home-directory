@@ -1,0 +1,44 @@
+#!/bin/bash
+
+trap "{ echo 'Exiting on user command.'; exit 0; }" SIGINT SIGTERM
+
+if [ -f .directories ]; then
+	LIST=`cat .directories`
+else
+	LIST=./*
+fi
+
+CMD=""
+TEST=""
+PREFIX=""
+
+while [ $# -gt 0 ]; do
+	if [ $1 == "-t" ]; then
+		shift
+		TEST=$1
+	else
+		CMD="${CMD}${PREFIX}$1"
+		PREFIX=" "
+	fi
+	shift
+done
+
+for i in $LIST; do
+	if [ "$TEST x" != " x" ]; then
+  		eval test $TEST
+  		TEST_EVAL=$?
+  	else 
+  		TEST_EVAL=0
+  	fi
+	if [ -d $i -a $TEST_EVAL -eq 0 ]; then
+    	echo "[$i] $CMD"
+	    pushd $i 2>&1 > /dev/null
+    	$CMD
+    	R=$?
+    	if [ $R -ne 0 ]; then
+    		echo "Command failed, exiting ..."
+    		exit $R
+    	fi
+	    popd 2>&1 > /dev/null
+	fi
+done
