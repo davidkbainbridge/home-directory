@@ -20,7 +20,7 @@ function prompt {
   local WHITE="\[\e[0;37m\]"
   local WHITEBOLD="\[\e[1;37m\]"
   local DEFAULT="\[\e[1;00m\]"
-  export PS1="$WHITEBOLD\h$BLACK:$BLUE"'\w'"$YELLOWBOLD\$ $DEFAULT"
+  export PS1="\[\e]0;\w\a\]$WHITEBOLD\h$BLACK:$BLUE"'\w'"$YELLOWBOLD\$ $DEFAULT"
 }
 prompt
 
