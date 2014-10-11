@@ -2,43 +2,138 @@
 
 trap "{ echo 'Exiting on user command.'; exit 0; }" SIGINT SIGTERM
 
+PROG=`basename $0`
+function usage {
+	echo "usage: $PROG [ -t test ] [ -d directory ] [ -f file ] command"
+	echo "    -t test            - specifies a test to perform before the command is"
+	echo "                         invoked on a directory. this test is executed from"
+	echo "                         parent directory. the child directory name can be used"
+	echo "                         in the test via the $i variable. the command is only"
+	echo "                         invoked if the test returns true [see man test(1)]"
+	echo "    -i test            - specifies an inner test to perform before the command is"
+	echo "                         invoked on a directory. this test is executed from"
+	echo "                         child directory. the command is only invoked if the test"
+	echo "                         returns true [see man test(1)]"
+	echo "    -d directory       - specifies a directory on which to invoke the command"
+	echo "                         this option can be specified multiple times to"
+	echo "                         specify multiple directories or can be a quaoted space"
+	echo "                         separated list of directory names"
+	echo "    -f file            - specifies a file that contains a list of directories"
+	echo "                         on which the command should be invoked. the directores"
+	echo "                         in this file will be appended to the list of"
+	echo "                         directories that have already been specified. this"
+	echo "                         option can be specified multiple times"
+	echo "    -h                 - displays this message and exists"
+	exit $1
+}
+
 if [ -f .directories ]; then
-	LIST=`cat .directories`
+	DEFAULT_LIST=`cat .directories`
 else
-	LIST=./*
+	DEFAULT_LIST=./*
 fi
 
+LIST=""
 CMD=""
 TEST=""
+ITEST=""
 PREFIX=""
 
 while [ $# -gt 0 ]; do
-	if [ $1 == "-t" ]; then
-		shift
-		TEST=$1
+	if [ "$CMD x" == " x" ]; then
+		case $1 in
+			-t)
+				shift
+				if [ $# -eq 0 ]; then
+					echo "ERROR: Unspecified test (-t) parameter value"
+					usage 1
+				fi
+				TEST=$1
+				shift
+				;;
+		    -i)
+				shift
+				if [ $# -eq 0 ]; then
+					echo "ERROR: Unspecified inner test (-i) parameter value"
+					usage 1
+				fi
+				ITEST=$1
+				shift
+				;;
+			-d)
+				shift
+				if [ $# -eq 0 ]; then
+					echo "ERROR: Unspecified directory (-d) parameter value"
+					usage 1
+				fi
+				LIST="$LIST $1"
+				shift
+				;;
+			-f)
+				shift
+				if [ $# -eq 0 ]; then
+					echo "ERROR: Unspecified directory file (-f) parameter value"
+					usage 1
+				fi
+				if [ ! -r "$1" ]; then
+					echo "ERROR: Specified directory file ($1) not found or readable"
+					exit 1
+				fi
+				LIST="$LIST `cat $1`"
+				shift
+				;;
+			-h)
+				usage 0
+				;;
+			*)
+				CMD="${CMD}${PREFIX}$1"
+				PREFIX=" "
+				shift
+				;;
+		esac
 	else
 		CMD="${CMD}${PREFIX}$1"
 		PREFIX=" "
+		shift
 	fi
-	shift
 done
 
+if [ "$LIST x" == " x" ]; then
+	LIST=$DEFAULT_LIST
+fi
+
 for i in $LIST; do
+	if [[ "$i" =~ ^[\ \t\r\n\v\f]*# ]]; then
+		continue
+	fi
 	if [ "$TEST x" != " x" ]; then
   		eval test $TEST
   		TEST_EVAL=$?
-  	else 
+  	else
   		TEST_EVAL=0
   	fi
 	if [ -d $i -a $TEST_EVAL -eq 0 ]; then
-    	echo "[$i] $CMD"
 	    pushd $i 2>&1 > /dev/null
-    	$CMD
-    	R=$?
-    	if [ $R -ne 0 ]; then
-    		echo "Command failed, exiting ..."
-    		exit $R
-    	fi
+	    if [ "$ITEST x" != " x" ]; then
+	    	eval test $ITEST
+	    	TEST_EVAL=$?
+	    else
+	    	TEST_EVAL=0
+	    fi
+	    if [ $TEST_EVAL -eq 0 ]; then
+            __CMD=`echo "$CMD" | sed -e "s|__DIR__|$i|g"`
+	    	echo "[$i] $__CMD"
+	    	$__CMD
+	    	R=$?
+	    	if [ $R -ne 0 ]; then
+	    		echo "Command failed, exiting ..."
+	    		exit $R
+	    	fi
+	    else
+	    	echo "[$i] SKIPPING ==> INNER TEST"
+	    fi
 	    popd 2>&1 > /dev/null
-	fi
+	else
+		echo "[$i] SKIPPING ==> OUTER TEST"
+    fi
 done
