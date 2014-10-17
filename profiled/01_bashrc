@@ -37,4 +37,7 @@ export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/
 PATH_CCACHE=/usr/local/Cellar/ccache/3.1.4/libexec
 export PATH=$HOME/bin:/usr/local/mysql/bin:$PATH_CCACHE:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/X11/bin:$GOROOT/bin
 
-shopt -s direxpand
+FOUND=`shopt | grep direxpand`
+if [ "$FOUND x" != " x" ]; then
+  shopt -s direxpand
+fi
