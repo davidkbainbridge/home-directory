@@ -1,0 +1,5 @@
+PLATFORM=`uname`
+
+if [ "$PLATFORM" = "Darwin" ]; then
+  export DOCKER_HOST=tcp://
+fi
