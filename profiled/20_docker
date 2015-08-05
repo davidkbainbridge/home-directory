@@ -3,3 +3,7 @@ PLATFORM=`uname`
 if [ "$PLATFORM" = "Darwin" ]; then
   export DOCKER_HOST=tcp://
 fi
+
+docker-ip() {
+    docker inspect --format '{{ .NetworkSettings.IPAddress }}' "$@"
+}
