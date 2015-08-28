@@ -1,32 +1,26 @@
 #!/bin/bash
 # -----------------------------------------------------------------------------
-# Forms ONOS cluster using REST API.
+# Forms ONOS cluster using REST API of each separate instance.
 # -----------------------------------------------------------------------------
 
-[ ! -d "$ONOS_ROOT" ] && echo "ONOS_ROOT is not defined" >&2 && exit 1
-. $ONOS_ROOT/tools/build/envDefaults
+[ $# -lt 2 ] && echo "usage: $(basename $0) ip1 ip2..." && exit 1
 
-# Scan arguments for user/password or other options...
-while getopts u:p: o; do
-    case "$o" in
-        u) user=$OPTARG;;
-        p) password=$OPTARG;;
-    esac
+ip=$1
+shift
+nodes=$*
+
+ipPrefix=${ip%.*}
+
+aux=/tmp/${ipPrefix}.cluster.json
+trap "rm -f $aux" EXIT
+
+echo "{ \"nodes\": [ { \"ip\": \"$ip\" }" > $aux
+for node in $nodes; do
+    echo ", { \"ip\": \"$node\" }" >> $aux
 done
-user=${user:-onos}           # user defaults to 'onos'
-password=${password:-$user}  # password defaults to user name if not specified
-let OPC=$OPTIND-1
-shift $OPC
+echo "], \"ipPrefix\": \"$ipPrefix.*\" }" >> $aux
 
-node=${1:-$OCI}
-
-if [ $node = "cell" ]; then
-    nodes=${ONOS_INSTANCES}
-    node=${OCI}
-else
-    nodes="$@"
-fi
-
-set -x
-
-ssh $ONOS_USER@$node $ONOS_INSTALL_DIR/bin/onos-form-cluster -u $user -p $password $nodes
+for node in $ip $nodes; do
+    echo "Forming cluster on $node..."
+    curl -X POST http://$node:8181/onos/v1/cluster/configuration -d @$aux
+done
