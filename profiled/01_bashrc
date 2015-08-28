@@ -35,7 +35,7 @@ export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/
 #     Add mysql, ccache, sbin's, and your scripts.
 #     Ensure ccache is before /usr/bin so it'll replace gcc.  "which gcc" should be a link to ccache.
 PATH_CCACHE=/usr/local/Cellar/ccache/3.1.4/libexec
-export PATH=$HOME/bin:/usr/local/mysql/bin:$PATH_CCACHE:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/X11/bin:$GOROOT/bin
+export PATH=$HOME/bin:$HOME/home-directory/bin:/usr/local/mysql/bin:$PATH_CCACHE:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/X11/bin:$GOROOT/bin
 
 FOUND=`shopt | grep direxpand`
 if [ "$FOUND x" != " x" ]; then
