@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <profiles>
+        <profile>
+            <id>common</id>
+            <properties>
+                <nexusproxy>http://nexus.opendaylight.org/content</nexusproxy>
+            </properties>
+            <repositories>
+                <repository>
+                    <id>odl-thirdpary</id>
+                    <name>OpenDaylight Third Party</name>
+                    <url>https://nexus.opendaylight.org/content/repositories/thirdparty</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
+            <id>include-odl-snapshot</id>
+            <repositories>
+                <repository>
+                    <id>odl-snapshot</id>
+                    <name>OpenDaylight Snapshots</name>
+                    <url>http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>odl-plugings-snapshot</id>
+                    <name>OpenDaylight Plugin Snapshot</name>
+                    <url>http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+        <profile>
+            <id>include-ciena-release</id>
+            <repositories>
+                <repository>
+                    <id>ciena-release</id>
+                    <name>Ciena Release</name>
+                    <url>https://nexus.ciena.com/content/repositories/sdn</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
+            <id>include-ciena-snapshot</id>
+            <repositories>
+                <repository>
+                    <id>ciena-snapshot</id>
+                    <name>Ciena Snapshot</name>
+                    <url>https://nexus.ciena.com/content/repositories/sdn-snapshots</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
+            <id>include-odl-release</id>
+            <repositories>
+                <repository>
+                    <id>odl-release</id>
+                    <name>OpenDaylight Snapshots</name>
+                    <url>http://nexus.opendaylight.org/content/repositories/opendaylight.release</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>odl-plugings-release</id>
+                    <name>OpenDaylight Plugin Release</name>
+                    <url>http://nexus.opendaylight.org/content/repositories/opendaylight.release</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+</settings>
