@@ -1,0 +1,60 @@
+function docker-ubuntu() {
+    case $1 in
+        env)
+            echo export DOCKER_HOST=tcp://docker-ubuntu:2375
+            ;;
+        ssh)
+            shift
+            ssh docker-ubuntu $@
+            ;;
+        ip)
+            echo 192.168.99.101
+            ;;
+        get-ip)
+            arp -l -a -n | grep -i `VBoxManage showvminfo docker-ubuntu | grep "NIC 2:" | sed -e "s/NIC 2: *MAC\: *\([0-9A-F]*\),.*/\1/" | sed 's/\(..\)/\1:/g;s/:$//' | sed 's/0\([0-9a-f]\)/\1/g'` | awk '{print $1}'
+            ;;
+        *)
+            echo "Unknown command"
+            ;;
+    esac
+}
+
+function smcli() {
+    docker exec -it solutionmanager smcli
+}
+
+function solutionmanager() {
+    if [ $1 == "start" ]; then
+        docker run -d -v /var/run/docker.sock:/tmp/docker.sock -v /bp2:/bp2  \
+            -p 8001:9999 \
+            -e NOAUTH=True \
+            -e DOCKER_SOCKET=/tmp/docker.sock \
+            -e DOCKER_HOST=unix:///tmp/docker.sock \
+            -e HISTFILE=/bp2/solutionmanager/data/.bash_history \
+            -e HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S " \
+            --restart=always \
+            --privileged=true \
+            --pid=host \
+            --name solutionmanager dockerreg.cyanoptics.com/cyan/solutionmanager:latest
+    else
+        docker stop solutionmanager && docker rm solutionmanager
+    fi
+}
+
+function solmaker() {
+    LAST=${@: -1}
+    FILE=
+    case $LAST in
+        *.yml|*.yaml)
+            FILE=$LAST
+            OPTS="${@:0:$#}"
+            FILE_BASE=`basename $FILE`
+            scp -q $FILE docker-ubuntu:solmaker/$FILE_BASE
+            ;;
+        *)
+            OPTS=$@
+            ;;
+    esac
+
+    ssh docker-ubuntu "(cd solmaker; ./env/bin/solmaker $OPTS $FILE_BASE)"
+}
